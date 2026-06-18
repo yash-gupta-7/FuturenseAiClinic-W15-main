@@ -1,0 +1,11 @@
+Question,Expected Document,Retrieved Source,Similarity Score,Hit (Y/N)
+What is the minimum TOEFL score required for international graduate applicants?,international_admission_policy.pdf,international_admission_policy.pdf,0.224,Y
+Are transfer credits accepted from non-accredited community colleges?,transfer_credit_policy.pdf,transfer_credit_policy.pdf,0.285,Y
+What is the deadline to submit the FAFSA for priority financial aid consideration?,financial_aid_policy.pdf,financial_aid_policy.pdf,0.198,Y
+How long can an accepted student defer their enrollment?,enrollment_deferral_policy.pdf,tuition_refund_policy.pdf,0.482,N
+What GPA is required to maintain merit-based academic scholarships?,scholarship_policy.pdf,scholarship_policy.pdf,0.201,Y
+Can waitlisted applicants submit additional recommendation letters to improve their chances?,waitlist_policy.pdf,waitlist_policy.pdf,0.215,Y
+What is the refund schedule if a student withdraws from all classes in the first week?,tuition_refund_policy.pdf,tuition_refund_policy.pdf,0.187,Y
+Are standardized test scores (SAT/ACT) required for home-schooled applicants?,homeschool_admission_policy.pdf,homeschool_admission_policy.pdf,0.254,Y
+Does the university offer application fee waivers for low-income domestic applicants?,fee_waiver_policy.pdf,financial_aid_policy.pdf,0.435,N
+What is the maximum number of credits that can be transferred toward an undergraduate degree?,transfer_credit_policy.pdf,transfer_credit_policy.pdf,0.261,Y
