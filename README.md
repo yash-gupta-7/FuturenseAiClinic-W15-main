@@ -1,24 +1,43 @@
-# AI Admission Copilot - Retrieval De-Risk Spike
+# 🎓 AI Admission Copilot - Retrieval Spike
 
-This repository contains the de-risk prototype spike for the **AI Admission Copilot**. The primary goal is to evaluate document ingestion, chunking strategies, vector embeddings, and retrieval accuracy against academic and admission policies before moving to full implementation.
+[![Status](https://img.shields.io/badge/Status-Prototype-orange.svg)]()
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![AI](https://img.shields.io/badge/Embeddings-OpenAI-green.svg)]()
 
----
-
-## Project Overview
-
-The retrieval spike acts as a sandboxed testing suite. It loads policy documents in PDF format, splits them into semantic chunks, indexes them into a local vector database, and runs a standardized evaluation dataset of 10 realistic admission questions to compute the **Hit Rate @ K=3**.
+This repository contains the **de-risk prototype spike** for the **AI Admission Copilot**. Before moving to full-scale development, this sandboxed suite evaluates our strategy for document ingestion, chunking algorithms, vector embeddings, and retrieval accuracy against real-world academic and admission policies.
 
 ---
 
-## Repository Structure
+## 📖 Project Overview
+
+The primary goal of this repository is to validate our RAG (Retrieval-Augmented Generation) foundation. The pipeline performs the following end-to-end:
+1. Loads complex policy documents in PDF format.
+2. Splits them into semantically meaningful chunks.
+3. Indexes them into a local vector database (ChromaDB).
+4. Runs a standardized evaluation dataset of realistic admission queries to compute the **Hit Rate @ K=3**.
+
+---
+
+## 📂 Repository Structure
+
+The project is structured to separate the core spike logic from documentation and design assets.
 
 ```text
 .
 ├── .gitignore
-├── README.md                # Project documentation (this file)
-└── spike/
-    ├── README.md            # Spike folder documentation
-    ├── config.py            # Environment configuration & hyperparameter constants
+├── README.md                # Main project documentation (this file)
+├── EXEC_MEMO.md             # Executive summary of findings
+├── FINDINGS.md              # Detailed spike evaluation findings
+├── findings.csv             # Raw evaluation metrics output
+├── prd/
+│   └── PRD.md               # Product Requirements Document
+├── design/
+│   └── ARCHITECTURE.md      # Proposed System Architecture
+├── diagrams/
+│   └── README.md            # Visual architecture assets
+└── spike/                   # Core implementation folder
+    ├── README.md            # Spike-specific documentation
+    ├── config.py            # Environment configuration & hyperparameters
     ├── retrieval.py         # Ingestion, chunking, and ChromaDB search logic
     ├── evaluation.py        # Question dataset & performance metrics calculation
     ├── main.py              # Orchestration entry point
@@ -27,15 +46,17 @@ The retrieval spike acts as a sandboxed testing suite. It loads policy documents
 
 ---
 
-## Setup Instructions
+## 🛠️ Setup Instructions
 
 ### 1. Clone & Navigate
 Navigate to the root directory of the workspace:
 ```bash
-cd FuturenseAiClinic-W15
+git clone https://github.com/yash-gupta-7/FuturenseAiClinic-W15-main.git
+cd FuturenseAiClinic-W15-main
 ```
 
-### 2. Create and Activate Virtual Environment
+### 2. Virtual Environment
+Create and activate a Python virtual environment to isolate dependencies:
 ```bash
 # On macOS/Linux
 python3 -m venv venv
@@ -48,52 +69,53 @@ Install the required packages using pip:
 pip install -r spike/requirements.txt
 ```
 
----
-
-## Environment Variables
-
+### 4. Environment Variables
 The project utilizes `python-dotenv` to manage secret keys. Create a `.env` file in the root directory:
-
 ```env
-OPENAI_API_KEY=your-actual-openai-api-key-here
+OPENAI_API_KEY=sk-your-actual-openai-api-key-here
 ```
 
 ---
 
-## How to Run
+## 🚀 How to Run the Spike
 
-1. Create a directory named `docs` in the root of the project (if it doesn't already exist):
+1. **Prepare Documents**: Create a directory named `docs` in the root of the project (if it doesn't already exist):
    ```bash
    mkdir docs
    ```
-2. Place all admission policy PDFs (e.g., `international_admission_policy.pdf`, `transfer_credit_policy.pdf`, etc.) inside the `docs/` folder.
-3. Run the end-to-end pipeline:
+2. **Add Policies**: Place all your admission policy PDFs (e.g., `international_admission_policy.pdf`, `transfer_credit_policy.pdf`) inside the `docs/` folder.
+3. **Execute Pipeline**: Run the end-to-end pipeline from the root directory:
    ```bash
    python -m spike.main
    ```
 
----
-
-## Evaluation Methodology
-
-The pipeline uses a testing dataset of **10 standard admission policy questions**. For each question:
-1. The question is embedded using OpenAI's `text-embedding-3-small` model.
-2. ChromaDB returns the **Top 3** most similar document chunks.
-3. The pipeline checks if the **expected source document** containing the answer exists within those top 3 results.
-4. It records the question, the matching/top retrieved document name, its similarity score, and flags whether it was a **Hit (Y/N)**.
-5. All results are written to `findings.csv`.
-6. Aggregate metrics (**Total Questions, Total Hits, and overall Hit Rate**) are calculated and output to the terminal.
+*(For a deeper dive into the retrieval architecture, check out the [Spike README](spike/README.md))*
 
 ---
 
-## Sample Output Table
+## 🧪 Evaluation Methodology
 
-When the pipeline finishes running, it outputs detailed metrics to `findings.csv`. A representative snapshot of the evaluation looks as follows:
+The pipeline uses a deterministic testing dataset of standard admission policy questions. The evaluation sequence is as follows:
 
-| Question | Expected Document | Retrieved Source | Similarity Score | Hit (Y/N) |
+1. **Embedding**: The question is embedded using OpenAI's `text-embedding-3-small` model.
+2. **Search**: ChromaDB performs a similarity search and returns the **Top 3** most relevant document chunks.
+3. **Validation**: The pipeline checks if the **expected source document** containing the answer exists within those top 3 results.
+4. **Logging**: It records the question, the top retrieved document, its similarity score, and a **Hit (Y/N)** flag.
+5. **Output**: All results are written to `findings.csv`, and aggregate metrics are printed to the console.
+
+---
+
+## 📊 Sample Evaluation Output
+
+When the pipeline finishes running, it outputs detailed metrics to `findings.csv`. A representative snapshot looks as follows:
+
+| Question | Expected Document | Retrieved Source | Score | Hit |
 | :--- | :--- | :--- | :---: | :---: |
-| What is the minimum TOEFL score required for international graduate applicants? | `international_admission_policy.pdf` | `international_admission_policy.pdf` | 0.231 | Y |
-| Are transfer credits accepted from non-accredited community colleges? | `transfer_credit_policy.pdf` | `transfer_credit_policy.pdf` | 0.312 | Y |
-| What is the deadline to submit the FAFSA for priority financial aid consideration? | `financial_aid_policy.pdf` | `financial_aid_policy.pdf` | 0.198 | Y |
-| How long can an accepted student defer their enrollment? | `enrollment_deferral_policy.pdf` | `scholarship_policy.pdf` | 0.540 | N |
-| What GPA is required to maintain merit-based academic scholarships? | `scholarship_policy.pdf` | `scholarship_policy.pdf` | 0.204 | Y |
+| What is the minimum TOEFL score required for international applicants? | `international_admission_policy.pdf` | `international_admission_policy.pdf` | 0.231 | ✅ **Y** |
+| Are transfer credits accepted from non-accredited community colleges? | `transfer_credit_policy.pdf` | `transfer_credit_policy.pdf` | 0.312 | ✅ **Y** |
+| What is the deadline to submit the FAFSA for priority consideration? | `financial_aid_policy.pdf` | `financial_aid_policy.pdf` | 0.198 | ✅ **Y** |
+| How long can an accepted student defer their enrollment? | `enrollment_deferral_policy.pdf` | `scholarship_policy.pdf` | 0.540 | ❌ **N** |
+| What GPA is required to maintain merit-based academic scholarships? | `scholarship_policy.pdf` | `scholarship_policy.pdf` | 0.204 | ✅ **Y** |
+
+---
+*Developed as part of the Futurense AI Clinic (W15)*
